@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos del Pasajero</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #00FFAA;
+            margin-bottom: 20px;
+        }
+
+        #info p {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #CCCCCC;
+        }
+
+        /* Estilos del botón de wsp */
+        .whatsapp-button {
+            background-color: #25D366;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #1EBE5B;
+        }
+
+        .whatsapp-button:active {
+            background-color: #1AAE51;
+        }
+
+        /* Enlace sin subrayado */
+        .whatsapp-link {
+            text-decoration: none;
+        }
+
+        /* Estilos adaptables para celu */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .whatsapp-button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            #info p {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <script type="module">
+        // Importa las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDr8zY0fJoppe4b-RWItFvWiGWW_tgYvO4",
+            authDomain: "alamanni-traslados-fa9c5.firebaseapp.com",
+            databaseURL: "https://alamanni-traslados-fa9c5-default-rtdb.firebaseio.com",
+            projectId: "alamanni-traslados-fa9c5",
+            storageBucket: "alamanni-traslados-fa9c5.appspot.com",
+            messagingSenderId: "119290167074",
+            appId: "1:119290167074:web:5a8e5ae83e97f74e7cef7b",
+            measurementId: "G-5QWZD0F4PK"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        async function leer() {
+            // Obtener la clave de la URL
+            const params = new URLSearchParams(window.location.search);
+            const clave = params.get('clave'); // Clave desde la URL
+
+            const dbRef = ref(database, 'users/' + clave); // Se accede directamente a la ruta del usuario por clave
+
+            try {
+                const snapshot = await get(dbRef);
+                if (snapshot.exists()) {
+                    const info = snapshot.val();
+                    document.getElementById('info').innerHTML = `
+                        <p>CLAVE: ${clave}</p>
+                        <p>Nombre: ${info.nombre}</p>
+                        <p>Dni: ${info.dni}</p>
+                    `;
+                } else {
+                    console.log("No hay datos disponibles");
+                    document.getElementById('info').innerHTML = `<p>No hay pasajeros asociados con esta clave !</p>`;
+                }
+            } catch (error) {
+                console.error("Error leyendo datos:", error);
+            }
+        }
+
+        // Ejecuta la función para leer
+        leer();
+    </script>
+</head>
+<body>
+    <h1>Datos del Pasajero</h1>
+    <div id="info"></div>
+    <a href="https://wa.me/3476360292?text=Hola,%20quiero%20una%20solucion%20digital%20para%20mi%20negocio" class="whatsapp-link">
+        <button class="whatsapp-button">
+            ¿Querés una solución digital?
+        </button>
+    </a>
+</body>
+</html>
